@@ -56,6 +56,24 @@ class StringCalculatorTest {
         Assertions.assertEquals(numberSumTestData.output,actual);
     }
 
+    @ParameterizedTest
+    @MethodSource("customDelimeters")
+    public void custom_delimiter_should_return_sum(NumberSumTestData customDelimeters) {
+        int result = underTest.add(customDelimeters.input);
+        Assertions.assertEquals(customDelimeters.output, result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("invalidInputsForCustomDelimeters")
+    public void invalid_input_for_custom_delimeter_should_throw_exception(String invalidInputs) {
+
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            underTest.add(invalidInputs);
+        });
+
+        Assertions.assertEquals("Non numerical value", thrown.getMessage());
+
+    }
     private static Stream<NumberSumTestData> multipleNumbers(){
         return  Stream.of(
                 new NumberSumTestData("1", 1),
@@ -76,10 +94,30 @@ class StringCalculatorTest {
 
     private static Stream<NumberSumTestData> multipleNumbersLineFeedSeparated(){
         return  Stream.of(
+                new NumberSumTestData("//;\n1;2", 3),             // Custom delimiter ";" (valid)
+                new NumberSumTestData("//;\n1;2;3", 6),           // Custom delimiter ";" (valid)
+                new NumberSumTestData("//*\n1*2", 3),             // Custom delimiter "*" (valid)
+                new NumberSumTestData("1,2", 3)                 // Default delimiters (comma and newline)
+
+        );
+    }
+
+    private static Stream<NumberSumTestData> customDelimeters(){
+        return  Stream.of(
                 new NumberSumTestData("1\n2",3),
                 new NumberSumTestData("1\n2\n3",6),
                 new NumberSumTestData("1\n2,3",6)
 
+        );
+    }
+
+    private static Stream<String> invalidInputsForCustomDelimeters(){
+        return  Stream.of(
+                "//;\n1,,2",     // Invalid, empty value between commas
+                "//\\n\n1,2;3",  // Invalid, malformed delimiter `\\n` at start
+                "//,,\n1,2;3",   // Invalid, double comma as delimiter (ambiguous case)
+                "////;\n1;2",    // Invalid, multiple slashes in delimiter
+                "//\\n\n1,2;3"   // Invalid, malformed delimiter `\\n`
         );
     }
 }
