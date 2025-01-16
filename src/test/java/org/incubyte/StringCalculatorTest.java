@@ -49,6 +49,13 @@ class StringCalculatorTest {
         Assertions.assertEquals(numberSumTestData.output,actual);
     }
 
+    @ParameterizedTest
+    @MethodSource("multipleNumbersLineFeedSeparated")
+    public void multiple_numbers_line_feed_separated_returns_sum(NumberSumTestData numberSumTestData){
+        int actual = underTest.add(numberSumTestData.input);
+        Assertions.assertEquals(numberSumTestData.output,actual);
+    }
+
     private static Stream<NumberSumTestData> multipleNumbers(){
         return  Stream.of(
                 new NumberSumTestData("1", 1),
@@ -58,11 +65,21 @@ class StringCalculatorTest {
         );
     }
 
+
     private static Stream<String> invalidInputs(){
         return Stream.of(
               "1,2,abc",
                 "1,2,,3",
                 "1,%,*,l"
+        );
+    }
+
+    private static Stream<NumberSumTestData> multipleNumbersLineFeedSeparated(){
+        return  Stream.of(
+                new NumberSumTestData("1\n2",3),
+                new NumberSumTestData("1\n2\n3",6),
+                new NumberSumTestData("1\n2,3",6)
+
         );
     }
 }
