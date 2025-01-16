@@ -29,6 +29,19 @@ class StringCalculatorTest {
         Assertions.assertEquals(2,actual);
     }
 
+
+    @ParameterizedTest
+    @MethodSource("invalidInputs")
+    public void invalid_input_should_throw_exception(String invalidInputs) {
+
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            underTest.add(invalidInputs);
+        });
+
+        Assertions.assertEquals("Non numerical value", thrown.getMessage());
+
+    }
+
     @ParameterizedTest
     @MethodSource("multipleNumbers")
     public void multiple_numbers_returns_sum(NumberSumTestData numberSumTestData){
@@ -42,6 +55,14 @@ class StringCalculatorTest {
                 new NumberSumTestData("1,2", 3),
                 new NumberSumTestData("1.1,2.2,3.3,4.4", 11),
                 new NumberSumTestData("1.1,2.2,3.3", 6)
+        );
+    }
+
+    private static Stream<String> invalidInputs(){
+        return Stream.of(
+              "1,2,abc",
+                "1,2,,3",
+                "1,%,*,l"
         );
     }
 }
