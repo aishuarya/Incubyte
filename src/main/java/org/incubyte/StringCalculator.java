@@ -11,8 +11,12 @@ public class StringCalculator {
         }
 
         String[] numbers = number.split(",");
-
-        return  (int) Arrays.stream(numbers).mapToDouble(Double::parseDouble).sum();
+        try {
+            return (int) Arrays.stream(numbers).mapToDouble(Double::parseDouble).sum();
+        }
+        catch (NumberFormatException e){
+            throw new IllegalArgumentException("Non numerical value");
+        }
 
     }
 }
