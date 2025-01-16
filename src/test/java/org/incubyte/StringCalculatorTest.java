@@ -74,6 +74,23 @@ class StringCalculatorTest {
         Assertions.assertEquals("Non numerical value", thrown.getMessage());
 
     }
+
+    @Test
+    public void negative_number_should_throw_exception() {
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            underTest.add("1,-2,3");
+        });
+        Assertions.assertEquals("negative numbers not allowed: -2", thrown.getMessage());
+    }
+
+    @Test
+    public void multiple_negative_numbers_should_throw_exception() {
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            underTest.add("1,-2,-3,4");
+        });
+        Assertions.assertEquals("negative numbers not allowed: -2, -3", thrown.getMessage());
+    }
+
     private static Stream<NumberSumTestData> multipleNumbers(){
         return  Stream.of(
                 new NumberSumTestData("1", 1),
@@ -120,6 +137,8 @@ class StringCalculatorTest {
                 "//\\n\n1,2;3"   // Invalid, malformed delimiter `\\n`
         );
     }
+
+
 }
 
 class NumberSumTestData{
