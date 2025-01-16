@@ -1,6 +1,5 @@
 package org.incubyte;
 
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class StringCalculator {
@@ -34,12 +33,29 @@ public class StringCalculator {
     }
 
     private int sumNumbers(String[] numbers) {
-        try {
-            return (int) Arrays.stream(numbers)
-                    .mapToDouble(Double::parseDouble)
-                    .sum();
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Non numerical value");
+        StringBuilder negativeNumbers = new StringBuilder();
+        double sum = 0;
+
+        for (String num : numbers) {
+            try {
+                double number = Double.parseDouble(num);
+                if (number < 0) {
+                    if (!negativeNumbers.isEmpty()) {
+                        negativeNumbers.append(", ");
+                    }
+                    negativeNumbers.append(num);
+                }
+                sum += number;
+
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Non numerical value");
+            }
         }
+
+        if (!negativeNumbers.isEmpty()) {
+            throw new IllegalArgumentException("negative numbers not allowed: " + negativeNumbers);
+        }
+
+        return (int) sum;
     }
 }
