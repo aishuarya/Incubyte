@@ -12,23 +12,28 @@ class StringCalculatorTest {
     private StringCalculator underTest = new StringCalculator();
 
     @Test
-    public void empty_String_should_return_zero(){
+    public void empty_String_should_return_zero() {
         int actual = underTest.add("");
-        Assertions.assertEquals(0,actual);
+        Assertions.assertEquals(0, actual);
     }
 
     @Test
-    public void single_number_returns_same_number(){
+    public void single_number_returns_same_number() {
         int actual = underTest.add("1");
-        Assertions.assertEquals(1,actual);
+        Assertions.assertEquals(1, actual);
     }
 
     @Test
-    public void two_numbers_returns_sum(){
+    public void two_numbers_returns_sum() {
         int actual = underTest.add("1,1");
-        Assertions.assertEquals(2,actual);
+        Assertions.assertEquals(2, actual);
     }
 
+    @Test
+    public void multiplyNumbers() {
+        int actual = underTest.add("//*\n5*6*7");
+        Assertions.assertEquals(210, actual);
+    }
 
     @ParameterizedTest
     @MethodSource("invalidInputs")
@@ -44,16 +49,16 @@ class StringCalculatorTest {
 
     @ParameterizedTest
     @MethodSource("multipleNumbers")
-    public void multiple_numbers_returns_sum(NumberSumTestData numberSumTestData){
+    public void multiple_numbers_returns_sum(NumberSumTestData numberSumTestData) {
         int actual = underTest.add(numberSumTestData.input);
-        Assertions.assertEquals(numberSumTestData.output,actual);
+        Assertions.assertEquals(numberSumTestData.output, actual);
     }
 
     @ParameterizedTest
     @MethodSource("multipleNumbersLineFeedSeparated")
-    public void multiple_numbers_line_feed_separated_returns_sum(NumberSumTestData numberSumTestData){
+    public void multiple_numbers_line_feed_separated_returns_sum(NumberSumTestData numberSumTestData) {
         int actual = underTest.add(numberSumTestData.input);
-        Assertions.assertEquals(numberSumTestData.output,actual);
+        Assertions.assertEquals(numberSumTestData.output, actual);
     }
 
     @ParameterizedTest
@@ -91,8 +96,8 @@ class StringCalculatorTest {
         Assertions.assertEquals("negative numbers not allowed: -2, -3", thrown.getMessage());
     }
 
-    private static Stream<NumberSumTestData> multipleNumbers(){
-        return  Stream.of(
+    private static Stream<NumberSumTestData> multipleNumbers() {
+        return Stream.of(
                 new NumberSumTestData("1", 1),
                 new NumberSumTestData("1,2", 3),
                 new NumberSumTestData("1.1,2.2,3.3,4.4", 11),
@@ -101,16 +106,16 @@ class StringCalculatorTest {
     }
 
 
-    private static Stream<String> invalidInputs(){
+    private static Stream<String> invalidInputs() {
         return Stream.of(
-              "1,2,abc",
+                "1,2,abc",
                 "1,2,,3",
                 "1,%,*,l"
         );
     }
 
-    private static Stream<NumberSumTestData> multipleNumbersLineFeedSeparated(){
-        return  Stream.of(
+    private static Stream<NumberSumTestData> multipleNumbersLineFeedSeparated() {
+        return Stream.of(
                 new NumberSumTestData("//;\n1;2", 3),             // Custom delimiter ";" (valid)
                 new NumberSumTestData("//;\n1;2;3", 6),           // Custom delimiter ";" (valid)
                 new NumberSumTestData("//*\n1*2", 3),             // Custom delimiter "*" (valid)
@@ -119,17 +124,17 @@ class StringCalculatorTest {
         );
     }
 
-    private static Stream<NumberSumTestData> customDelimeters(){
-        return  Stream.of(
-                new NumberSumTestData("1\n2",3),
-                new NumberSumTestData("1\n2\n3",6),
-                new NumberSumTestData("1\n2,3",6)
+    private static Stream<NumberSumTestData> customDelimeters() {
+        return Stream.of(
+                new NumberSumTestData("1\n2", 3),
+                new NumberSumTestData("1\n2\n3", 6),
+                new NumberSumTestData("1\n2,3", 6)
 
         );
     }
 
-    private static Stream<String> invalidInputsForCustomDelimeters(){
-        return  Stream.of(
+    private static Stream<String> invalidInputsForCustomDelimeters() {
+        return Stream.of(
                 "//;\n1,,2",     // Invalid, empty value between commas
                 "//\\n\n1,2;3",  // Invalid, malformed delimiter `\\n` at start
                 "//,,\n1,2;3",   // Invalid, double comma as delimiter (ambiguous case)
@@ -138,10 +143,12 @@ class StringCalculatorTest {
         );
     }
 
+    // "//*\n5*6*7"
+
 
 }
 
-class NumberSumTestData{
+class NumberSumTestData {
     String input;
     int output;
 

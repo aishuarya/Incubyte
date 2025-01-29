@@ -23,6 +23,10 @@ public class StringCalculator {
 
         String delimiter = extractDelimiter(delimiterLine);
 
+        if(delimiter.equals("*")){
+            return multiplyNumbers(numbers.split(Pattern.quote(delimiter)));
+        }
+
         return sumNumbers(numbers.split(Pattern.quote(delimiter)));
     }
 
@@ -31,11 +35,39 @@ public class StringCalculator {
             return delimiterLine.substring(2);
 
     }
-
     private int sumNumbers(String[] numbers) {
-        StringBuilder negativeNumbers = new StringBuilder();
         double sum = 0;
+        logNegativeNumbers(numbers);
+        for (String num : numbers) {
+            try {
+                double number = Double.parseDouble(num);
+                sum += number;
 
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Non numerical value");
+            }
+        }
+        return (int) sum;
+    }
+
+    private  int multiplyNumbers(String[] numbers){
+        double sum = 0;
+        logNegativeNumbers(numbers);
+        for (String num : numbers) {
+            try {
+                double number = Double.parseDouble(num);
+
+                sum *= number;
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Non numerical value");
+            }
+        }
+        return (int) sum;
+
+    }
+
+    private void logNegativeNumbers(String[] numbers) {
+        StringBuilder negativeNumbers = new StringBuilder();
         for (String num : numbers) {
             try {
                 double number = Double.parseDouble(num);
@@ -45,17 +77,15 @@ public class StringCalculator {
                     }
                     negativeNumbers.append(num);
                 }
-                sum += number;
 
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Non numerical value");
             }
+            if (!negativeNumbers.isEmpty()) {
+                throw new IllegalArgumentException("negative numbers not allowed: " + negativeNumbers);
+            }
         }
-
-        if (!negativeNumbers.isEmpty()) {
-            throw new IllegalArgumentException("negative numbers not allowed: " + negativeNumbers);
-        }
-
-        return (int) sum;
     }
+
+
 }
