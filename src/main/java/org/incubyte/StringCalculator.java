@@ -39,33 +39,33 @@ public class StringCalculator {
         double sum = 0;
         logNegativeNumbers(numbers);
         for (String num : numbers) {
-            try {
-                double number = Double.parseDouble(num);
+                double number = parseDouble(num);
                 sum += number;
-
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Non numerical value");
-            }
         }
         return (int) sum;
     }
 
     private  int multiplyNumbers(String[] numbers){
-        double sum = 0;
+        double sum = 1;
         logNegativeNumbers(numbers);
         for (String num : numbers) {
-            try {
-                double number = Double.parseDouble(num);
-
+                double number = parseDouble(num);
                 sum *= number;
-            } catch (NumberFormatException e) {
-                throw new IllegalArgumentException("Non numerical value");
-            }
         }
         return (int) sum;
 
     }
 
+    private double parseDouble(String  num) {
+        double number = 0.0;
+        try {
+             number = Double.parseDouble(num);
+        }
+        catch (NumberFormatException e){
+            throw new IllegalArgumentException("Non numerical value");
+        }
+           return  number;
+    }
     private void logNegativeNumbers(String[] numbers) {
         StringBuilder negativeNumbers = new StringBuilder();
         for (String num : numbers) {
@@ -81,9 +81,9 @@ public class StringCalculator {
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("Non numerical value");
             }
-            if (!negativeNumbers.isEmpty()) {
-                throw new IllegalArgumentException("negative numbers not allowed: " + negativeNumbers);
-            }
+        }
+        if (!negativeNumbers.isEmpty()) {
+            throw new IllegalArgumentException("negative numbers not allowed: " + negativeNumbers);
         }
     }
 
